@@ -1,0 +1,9 @@
+---
+# vars file for clickhouse-role
+clickhouse_version: "22.3.3.44"
+clickhouse_packages:
+  - clickhouse-client
+  - clickhouse-server
+  - clickhouse-common-static
+clickhouse_config_path: /etc/clickhouse-server/config.xml
+clickhouse_users_path: /etc/clickhouse-server/users.xml

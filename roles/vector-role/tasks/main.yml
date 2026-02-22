@@ -1,0 +1,49 @@
+---
+# tasks file for vector-role
+# Скачивание rpm пакета vector для установки
+- name: Get Vector distrib
+  ansible.builtin.get_url:
+    url: "https://packages.timber.io/vector/0.21.1/vector-0.21.1-1.{{ ansible_architecture }}.rpm"
+    dest: "./vector-0.21.1-1.{{ ansible_architecture }}.rpm"
+    mode: 0644
+# Установка rpm пакета vector
+- name: Install Vector packages
+  become: true
+  ansible.builtin.yum:
+    name: vector-0.21.1-1.{{ ansible_architecture }}.rpm
+    state: present
+  notify: Start Vector service
+# Создание файла конфигурации для vector.
+- name: Deploy config Vector
+  ansible.builtin.template:
+    src: vector.j2
+    dest: "{{ vector_config_path }}"
+    mode: 0644
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+    validate: vector validate --no-environment --config-yaml %s
+  become: true
+  notify: Start Vector service
+# Создание каталога для sources local_logs
+- name: Creates directory
+  become: true
+  file:
+    path: /var/lib/vector/local_logs
+    state: directory
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+    mode: 0644
+- name: Create systemd unit Vector
+  become: true
+  template:
+    src: vector.service.j2
+    dest: /etc/systemd/system/vector.service
+    mode: 0644
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+- name: Start Vector service
+  become: true
+  systemd:
+    name: vector
+    state: started
+    daemon_reload: true

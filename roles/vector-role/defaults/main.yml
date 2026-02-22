@@ -1,0 +1,4 @@
+---
+# defaults file for vector-role
+clickhouse_user: netology
+clickhouse_password: netology

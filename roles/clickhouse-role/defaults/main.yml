@@ -1,0 +1,4 @@
+---
+# defaults file for clickhouse-role
+clickhouse_user: netology
+clickhouse_password: netology
