@@ -110,7 +110,6 @@ verifier:
 
 <details>
 
-
 <summary>результат выполнения команды: molecule test -s default </summary>
 
 ```shell 
@@ -496,7 +495,11 @@ WARNING  Molecule executed 1 scenario (1 missing files)
 Добавили файлы. Запустили контейнер и команду tox в нем. Вывод
 
 <details>
-```[root@fdb585299239 vector-role]# tox
+
+<summary>результат выполнения команды tox как есть</summary>
+
+```shell
+[root@fdb585299239 vector-role]# tox
 py37-ansible29 recreate: /opt/vector-role/roles/vector-role/.tox/py37-ansible29
 py37-ansible29 installdeps: -rtox-requirements.txt, ansible>=2.9,<2.10, molecule<4.0, molecule-podman<2.0
 py37-ansible29 installed: ansible==2.9.27,ansible-compat==1.0.0,arrow==1.2.3,bcrypt==4.2.1,binaryornot==0.4.4,cached-property==1.5.2,Cerberus==1.3.8,certifi==2026.1.4,cffi==1.15.1,chardet==5.2.0,charset-normalizer==3.4.4,click==8.1.8,click-help-colors==0.9.4,cookiecutter==2.6.0,cryptography==45.0.7,distro==1.9.0,enrich==1.2.7,idna==3.10,importlib-metadata==6.7.0,Jinja2==3.1.6,jmespath==1.0.1,lxml==5.4.0,markdown-it-py==2.2.0,MarkupSafe==2.1.5,mdurl==0.1.2,molecule==3.6.1,molecule-podman==1.1.0,packaging==24.0,paramiko==2.12.0,pluggy==1.2.0,pycparser==2.21,Pygments==2.17.2,PyNaCl==1.5.0,python-dateutil==2.9.0.post0,python-slugify==8.0.4,PyYAML==6.0.1,requests==2.31.0,rich==13.8.1,selinux==0.2.1,six==1.17.0,subprocess-tee==0.3.5,text-unidecode==1.3,typing_extensions==4.7.1,urllib3==2.0.7,zipp==3.15.0
@@ -508,7 +511,8 @@ CRITICAL 'molecule/compatibility/molecule.yml' glob failed.  Exiting.
 ERROR: InvocationError for command /opt/vector-role/roles/vector-role/.tox/py37-ansible29/bin/molecule test -s compatibility --destroy always (exited with code 1)
 _________________________________________________________________________________________________ summary __________________________________________________________________________________________________
 ERROR:   py37-ansible29: commands failed
-[root@fdb585299239 vector-role]# ```
+[root@fdb585299239 vector-role]# 
+```
 </details>
 Возникает ожидаемая ошибка CRITICAL 'molecule/compatibility/molecule.yml' glob failed - это нормально для промежуточного этапа, так как сценарий compatibility еще не создан
 
@@ -910,7 +914,6 @@ ________________________________________________________________________________
   py37-ansible210: commands succeeded
   py37-ansible30: commands succeeded
   congratulations :)
-
 ```
 </details>
 
