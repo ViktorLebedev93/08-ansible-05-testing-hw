@@ -1,0 +1,22 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: ubuntu-vector
+    image: docker.io/pycontribs/ubuntu:latest
+    pre_build_image: true
+  - name: centos-7-vector
+    image: docker.io/pycontribs/centos:7
+    pre_build_image: true
+  - name: fedora-vector
+    image: docker.io/pycontribs/fedora:latest
+    pre_build_image: true
+provisioner:
+  name: ansible
+  playbooks:
+    converge: converge.yml
+    verify: verify.yml
+verifier:
+  name: ansible

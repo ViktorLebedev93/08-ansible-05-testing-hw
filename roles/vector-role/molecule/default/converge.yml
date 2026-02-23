@@ -1,0 +1,41 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  vars:
+    vector_version: "0.21.0"
+    vector_disable_gpg_check: true
+    vector_config_path: /etc/vector/vector.yaml
+  tasks:
+    - name: Include install tasks directly
+      include_tasks: "{{ playbook_dir }}/../../tasks/install_vector.yml"
+
+    - name: Create vector config directory
+      file:
+        path: /etc/vector
+        state: directory
+        mode: 0755
+
+    - name: Create simple vector config for testing
+      copy:
+        content: |
+          sources:
+            in:
+              type: stdin
+          sinks:
+            out:
+              inputs: ["in"]
+              type: console
+              encoding:
+                codec: text
+        dest: "{{ vector_config_path }}"
+        mode: 0644
+
+    - name: Verify vector installation
+      command: vector --version
+      register: vector_version
+      changed_when: false
+
+    - name: Display vector version
+      debug:
+        msg: "Vector version: {{ vector_version.stdout }}"

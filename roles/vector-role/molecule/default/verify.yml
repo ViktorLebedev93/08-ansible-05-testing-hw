@@ -1,0 +1,42 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Check if vector is installed
+      command: vector --version
+      register: vector_version
+      changed_when: false
+      ignore_errors: yes
+
+    - name: Display vector version
+      debug:
+        msg: "Vector version: {{ vector_version.stdout | default('Not installed') }}"
+
+    - name: Verify vector installation
+      assert:
+        that:
+          - vector_version.rc == 0
+        msg: "Vector is not properly installed"
+      ignore_errors: yes
+
+    - name: Check vector config file
+      stat:
+        path: /etc/vector/vector.yaml
+      register: config_file
+
+    - name: Verify config file exists
+      assert:
+        that:
+          - config_file.stat.exists
+        msg: "Vector config file does not exist"
+
+    - name: Validate vector config syntax
+      command: vector validate --no-environment --config-yaml /etc/vector/vector.yaml
+      register: config_validate
+      changed_when: false
+      ignore_errors: yes
+
+    - name: Display validation result
+      debug:
+        msg: "Config validation: {{ 'OK' if config_validate.rc == 0 else 'FAILED' }}"
