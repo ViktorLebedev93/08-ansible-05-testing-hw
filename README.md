@@ -24,12 +24,12 @@
 
 ### Решение Molecule
 
-1. Получаем ошибку из за отсутствия сценариев
+Получаем ошибку из за отсутствия сценариев
 ![img1](img/img1.jpg)
-2. В новых версиях molecule драйвер не задается через экстра параметры в командной строке. Выполняем для инициализации
+В новых версиях molecule драйвер не задается через экстра параметры в командной строке. Выполняем для инициализации
 `molecule init scenario`
 ![img1-2](img/img1-2.jpg)
-3. Добавляем в драйвер docker а в платформы несколько дистрибутивов
+Добавляем в драйвер docker а в платформы несколько дистрибутивов
 ```yml 
 # default/molecule.yml
 ---
@@ -55,7 +55,58 @@ provisioner:
 verifier:
   name: ansible
 ```
-4. Выполняем `molecule test -s default`
+
+Добавляем assert'ы в файл проверок
+
+```yml 
+# default/verify.yml
+
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Check if vector is installed
+      command: vector --version
+      register: vector_version
+      changed_when: false
+      ignore_errors: yes
+
+    - name: Display vector version
+      debug:
+        msg: "Vector version: {{ vector_version.stdout | default('Not installed') }}"
+
+    - name: Verify vector installation
+      assert:
+        that:
+          - vector_version.rc == 0
+        msg: "Vector is not properly installed"
+      ignore_errors: yes
+
+    - name: Check vector config file
+      stat:
+        path: /etc/vector/vector.yaml
+      register: config_file
+
+    - name: Verify config file exists
+      assert:
+        that:
+          - config_file.stat.exists
+        msg: "Vector config file does not exist"
+
+    - name: Validate vector config syntax
+      command: vector validate --no-environment --config-yaml /etc/vector/vector.yaml
+      register: config_validate
+      changed_when: false
+      ignore_errors: yes
+
+    - name: Display validation result
+      debug:
+        msg: "Config validation: {{ 'OK' if config_validate.rc == 0 else 'FAILED' }}"
+
+```
+
+Выполняем `molecule test -s default`
 
 <details>
 
