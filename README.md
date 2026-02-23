@@ -571,7 +571,9 @@ jmespath
 ```
 
 <details>
+
 <summary>полый результат выполнения tox</summary>
+
 ```shell
 [root@65dbc58a2b5d vector-role]# tox
 py37-ansible210 create: /opt/vector-role/roles/vector-role/.tox/py37-ansible210
